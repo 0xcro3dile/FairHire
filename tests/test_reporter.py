@@ -1,5 +1,4 @@
 # tests for ReporterAgent
-import pytest
 from fairhire.agents.reporter import ReporterAgent
 
 def test_generate_markdown():

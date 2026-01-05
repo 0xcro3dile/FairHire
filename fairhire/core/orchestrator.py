@@ -4,8 +4,6 @@ from langgraph.graph import StateGraph, START, END
 import pandas as pd
 
 from fairhire.agents.data_bias import DataBiasAgent
-from fairhire.agents.model_bias import ModelBiasAgent
-from fairhire.agents.explainer import ExplainerAgent
 from fairhire.agents.reporter import ReporterAgent
 
 class AuditState(TypedDict):  # shared state passed between nodes

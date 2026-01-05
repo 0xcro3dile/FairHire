@@ -9,8 +9,8 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: '3.12'
-    - name: Install ruff
-      run: pip install ruff
+    - name: Install linters
+      run: pip install ruff pylint
     - name: Check 2-space indent
       run: python -m pylint --disable=all -e W0311 -e C0303 --indent-string='  ' fairhire/ || true
     - name: Lint with ruff

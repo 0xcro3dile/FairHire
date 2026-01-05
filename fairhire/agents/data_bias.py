@@ -1,5 +1,4 @@
 # AIF360 wrapper for statistical bias detection
-import numpy as np
 import pandas as pd
 from aif360.datasets import BinaryLabelDataset
 from aif360.metrics import BinaryLabelDatasetMetric

@@ -1,6 +1,5 @@
 # tests for ModelBiasAgent
 import numpy as np
-import pytest
 from fairhire.agents.model_bias import ModelBiasAgent
 
 def test_compute_metrics():

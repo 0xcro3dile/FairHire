@@ -1,5 +1,7 @@
 # FairHire Auditor
 
+![tests](https://github.com/0xcro3dile/FairHire/actions/workflows/ci.yml/badge.svg) ![license](https://img.shields.io/badge/license-MIT-green)
+
 > The open source bias audit platform for recruitment AI
 
 Companies use AI to screen candidates but can't explain rejections. Existing bias detection tools (IBM AIF360, Microsoft Fairlearn) are libraries for data scientists, not platforms for HR teams.

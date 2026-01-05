@@ -1,6 +1,5 @@
 # tests for DataBiasAgent
 import pandas as pd
-import pytest
 from fairhire.agents.data_bias import DataBiasAgent
 
 def sample_df():
