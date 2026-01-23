@@ -32,3 +32,9 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["fairhire"]
+
+[tool.coverage.run]
+omit = ["fairhire/dashboard/*"]
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "if __name__"]
