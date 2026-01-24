@@ -135,11 +135,10 @@ def list_audits(limit: int = 50, offset: int = 0) -> AuditListResponse:
     if offset < 0:
         raise HTTPException(400, "Offset must be non-negative")
 
-    all_keys = list(memory.list_keys("fairhire:audit:*"))
-    paginated = all_keys[offset : offset + limit]
+    audit_ids, total = memory.list_audit_ids(limit=limit, offset=offset)
     return AuditListResponse(
-        audits=[k.replace("fairhire:audit:", "") for k in paginated],
-        total=len(all_keys),
+        audits=audit_ids,
+        total=total,
         limit=limit,
         offset=offset,
     )
