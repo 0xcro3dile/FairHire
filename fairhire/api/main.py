@@ -45,12 +45,18 @@ def health() -> dict[str, str]:
 
     try:
         memory = Memory()
-        memory.client.ping()
-        log.debug("health_check", status="healthy")
-        return {"status": "healthy", "redis": "connected"}
+        redis_ok = memory.ping_redis()
+        postgres_status = memory.archive_status()
+        status = "healthy" if redis_ok and postgres_status != "error" else "degraded"
+        log.debug("health_check", status=status, postgres=postgres_status)
+        return {
+            "status": status,
+            "redis": "connected" if redis_ok else "error",
+            "postgres": postgres_status,
+        }
     except Exception as e:
         log.warning("health_check_degraded", error=str(e))
-        return {"status": "degraded", "redis": f"error: {e}"}
+        return {"status": "degraded", "redis": f"error: {e}", "postgres": "error"}
 
 
 if __name__ == "__main__":
