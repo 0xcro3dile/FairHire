@@ -13,7 +13,10 @@ log = structlog.get_logger(__name__)
 
 class Memory:
     def __init__(self, redis_url: str = REDIS_URL) -> None:
-        self.client: redis.Redis = redis.Redis.from_url(redis_url, decode_responses=True)
+        self.client: redis.Redis[str] = redis.Redis.from_url(
+            redis_url,
+            decode_responses=True,
+        )
         try:
             self.client.ping()
             log.info("redis_connected", url=redis_url)

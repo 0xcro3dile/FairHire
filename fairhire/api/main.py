@@ -1,10 +1,21 @@
 # FastAPI app entrypoint
 # L20 compliant: strict types, structlog
+from typing import Any, Callable, Protocol, TypeVar, cast
+
 import structlog
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from fairhire.api.routes import router
+
+_THandler = TypeVar("_THandler", bound=Callable[..., object])
+
+
+class _TypedFastAPI(Protocol):
+    def get(self, path: str, **kwargs: Any) -> Callable[[_THandler], _THandler]: ...
+    def add_middleware(self, middleware_class: type[Any], **kwargs: Any) -> None: ...
+    def include_router(self, router: object) -> None: ...
+
 
 log = structlog.get_logger(__name__)
 
@@ -13,6 +24,7 @@ app = FastAPI(
     version="0.1.0",
     description="AI Hiring Bias Detection API",
 )
+typed_app = cast(_TypedFastAPI, app)
 
 # CORS configuration
 app.add_middleware(
@@ -26,7 +38,7 @@ app.add_middleware(
 app.include_router(router)
 
 
-@app.get("/health")
+@typed_app.get("/health")
 def health() -> dict[str, str]:
     """Health check endpoint."""
     from fairhire.core.memory import Memory

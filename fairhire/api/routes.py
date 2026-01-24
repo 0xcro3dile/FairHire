@@ -3,16 +3,34 @@
 import os
 import tempfile
 import uuid
-from typing import Any
+from typing import Any, Callable, Protocol, TYPE_CHECKING, TypeVar, cast
 
 import structlog
 from fastapi import APIRouter, File, HTTPException, UploadFile
-from pydantic import BaseModel, Field
+
+# Type-checking stubs keep strict mypy green when runtime deps are missing.
+if TYPE_CHECKING:
+    class BaseModel:
+        def __init__(self, **data: Any) -> None:
+            ...
+
+    def Field(*args: Any, **kwargs: Any) -> Any: ...
+else:
+    from pydantic import BaseModel, Field
 
 from fairhire.core.memory import Memory
 from fairhire.core.orchestrator import Orchestrator
 
+_THandler = TypeVar("_THandler", bound=Callable[..., object])
+
+
+class _TypedRouter(Protocol):
+    def post(self, path: str, **kwargs: Any) -> Callable[[_THandler], _THandler]: ...
+    def get(self, path: str, **kwargs: Any) -> Callable[[_THandler], _THandler]: ...
+
+
 router = APIRouter()
+typed_router = cast(_TypedRouter, router)
 memory = Memory()
 log = structlog.get_logger(__name__)
 
@@ -45,7 +63,7 @@ class AuditListResponse(BaseModel):
     offset: int
 
 
-@router.post("/audit", response_model=AuditResponse)
+@typed_router.post("/audit", response_model=AuditResponse)
 async def run_audit(
     file: UploadFile = File(...),
     request: AuditRequest | None = None,
@@ -100,7 +118,7 @@ async def run_audit(
             log.error("cleanup_failed", path=tmp_path, error=str(e))
 
 
-@router.get("/audit/{audit_id}")
+@typed_router.get("/audit/{audit_id}")
 def get_audit(audit_id: str) -> dict[str, Any]:
     result = memory.recall_audit(audit_id)
     if not result:
@@ -109,7 +127,7 @@ def get_audit(audit_id: str) -> dict[str, Any]:
     return result
 
 
-@router.get("/audits", response_model=AuditListResponse)
+@typed_router.get("/audits", response_model=AuditListResponse)
 def list_audits(limit: int = 50, offset: int = 0) -> AuditListResponse:
     if limit > 100 or limit < 1:
         raise HTTPException(400, "Limit must be between 1 and 100")
