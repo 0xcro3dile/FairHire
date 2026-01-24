@@ -17,6 +17,7 @@ dependencies = [
   "scikit-learn>=1.4",
   "numpy>=1.26",
   "pydantic>=2.0",
+  "psycopg[binary,pool]>=3.1",
   "orjson>=3.9",
   "structlog>=24.0",
   "python-multipart>=0.0.9",
