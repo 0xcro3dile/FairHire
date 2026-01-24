@@ -59,14 +59,14 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for complete C4 Level 3 diagram
 ### Phase 1: MVP (4 weeks)
 **Goal:** Prove multi-agent bias detection works
 
-- [ ] Multi-agent orchestrator (LangGraph)
-- [ ] Data Bias Agent (Chi-square, Z-test via AIF360)
-- [ ] Model Bias Agent (demographic parity only via Fairlearn)
-- [ ] Basic memory (Redis only, no PostgreSQL archival yet)
-- [ ] Explainability Agent (LIME only, skip SHAP)
-- [ ] Report Generator (technical report only)
-- [ ] REST API (FastAPI)
-- [ ] Simple dashboard (Streamlit)
+- [x] Multi-agent orchestrator (LangGraph)
+- [x] Data Bias Agent (Chi-square, Z-test via AIF360)
+- [x] Model Bias Agent (demographic parity only via Fairlearn)
+- [x] Basic memory (Redis only, no PostgreSQL archival yet)
+- [x] Explainability Agent (LIME only, skip SHAP)
+- [x] Report Generator (technical report only)
+- [x] REST API (FastAPI)
+- [x] Simple dashboard (Streamlit)
 
 **Not in MVP:** Audit Trail Agent, counterfactuals, trend analysis, WebSocket updates
 
@@ -108,5 +108,4 @@ Free to use commercially, modify, and distribute. Just keep the license notice.
 ---
 
 **"Bias detection shouldn't require a PhD in fairness metrics."**
-
 
