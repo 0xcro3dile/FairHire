@@ -1,7 +1,7 @@
 # LangGraph orchestrator - coordinates bias detection agents
 # L20 compliant: strict types, structlog, Callable over object
 from collections.abc import Callable
-from typing import Any, TypedDict
+from typing import Any, TypedDict, cast
 
 import numpy as np
 import pandas as pd
@@ -183,4 +183,4 @@ class Orchestrator:
             "status": "pending",
             "df": None,
         }
-        return self.compiled.invoke(initial_state)
+        return cast(dict[str, Any], self.compiled.invoke(cast(Any, initial_state)))
