@@ -1,6 +1,6 @@
 # Redis session memory - 90 day TTL for audits
 # L20 compliant: orjson, strict types, pipeline support
-from typing import Any
+from typing import Any, cast
 
 import orjson
 import redis
@@ -13,7 +13,9 @@ log = structlog.get_logger(__name__)
 
 class Memory:
     def __init__(self, redis_url: str = REDIS_URL) -> None:
-        self.client: redis.Redis[str] = redis.from_url(redis_url, decode_responses=True)
+        self.client: redis.Redis = redis.Redis.from_url(
+            redis_url, decode_responses=True
+        )
         try:
             self.client.ping()
             log.info("redis_connected", url=redis_url)
@@ -28,7 +30,10 @@ class Memory:
 
     def recall(self, key: str) -> dict[str, Any] | None:
         data = self.client.get(key)
-        return orjson.loads(data) if data else None
+        if data is None:
+            return None
+        # orjson.loads accepts str | bytes; data is str from decode_responses=True
+        return cast(dict[str, Any], orjson.loads(str(data)))
 
     def delete(self, key: str) -> bool:
         return bool(self.client.delete(key))
