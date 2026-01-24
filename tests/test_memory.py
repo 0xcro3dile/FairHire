@@ -5,9 +5,9 @@ import uuid
 import pytest
 
 os.environ.setdefault("REDIS_URL", "redis://localhost:6379")
-os.environ.pop("POSTGRES_URL", None)
 
 from fairhire.core.memory import Memory
+from fairhire.core import memory as memory_module
 
 
 @pytest.fixture
@@ -75,8 +75,9 @@ def test_batch_empty_noop(memory: Memory) -> None:
     assert memory.recall_batch([]) == {}
 
 
-def test_archive_status_disabled(memory: Memory) -> None:
-    assert memory.archive_status() == "disabled"
+def test_archive_status_disabled(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(memory_module, "POSTGRES_URL", "")
+    assert Memory().archive_status() == "disabled"
 
 
 def test_ping_redis(memory: Memory) -> None:
