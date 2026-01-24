@@ -18,7 +18,7 @@ def getenv(key: str, default: int) -> int: ...
 def getenv(key: str, default: str | int | None = None) -> str | int | None:
     """
     Get environment variable with type-inferred default.
-    
+
     L20: Proper typing, no Any, handles int coercion.
     """
     val = os.environ.get(key)
@@ -32,7 +32,7 @@ def getenv(key: str, default: str | int | None = None) -> str | int | None:
 def colored(text: str, color: str) -> str:
     """
     ANSI color wrapper for terminal output.
-    
+
     L20: No external deps for simple coloring.
     """
     colors: dict[str, str] = {
