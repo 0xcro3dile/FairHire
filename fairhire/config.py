@@ -1,6 +1,7 @@
 from fairhire.helpers import getenv
 
 REDIS_URL = getenv("REDIS_URL", "redis://localhost:6379")
+POSTGRES_URL = getenv("POSTGRES_URL", "")
 OLLAMA_URL = getenv("OLLAMA_URL", "http://localhost:11434")
 DEBUG = getenv("DEBUG", 0)
 
