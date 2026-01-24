@@ -10,11 +10,12 @@ from fastapi import APIRouter, File, HTTPException, UploadFile
 
 # Type-checking stubs keep strict mypy green when runtime deps are missing.
 if TYPE_CHECKING:
+
     class BaseModel:
-        def __init__(self, **data: Any) -> None:
-            ...
+        def __init__(self, **data: Any) -> None: ...
 
     def Field(*args: Any, **kwargs: Any) -> Any: ...
+
 else:
     from pydantic import BaseModel, Field
 
