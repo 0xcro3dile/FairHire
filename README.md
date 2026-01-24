@@ -12,6 +12,11 @@ Companies use AI to screen candidates but can't explain rejections. Existing bia
 
 **Current Phase:** Architecture complete, starting MVP  
 
+## Configuration
+
+- `REDIS_URL`: Redis connection string (required).
+- `POSTGRES_URL`: optional Postgres connection string for Tier 3 audit archive.
+
 
 ## Features to be added
 
@@ -108,4 +113,3 @@ Free to use commercially, modify, and distribute. Just keep the license notice.
 ---
 
 **"Bias detection shouldn't require a PhD in fairness metrics."**
-
