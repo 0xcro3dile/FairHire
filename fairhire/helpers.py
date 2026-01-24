@@ -1,81 +1,50 @@
-# shared utils, tinygrad style
-import os, functools
-from typing import TypeVar, Any
-from contextvars import ContextVar as _ContextVar
-
-T = TypeVar("T")
+# L20 compliant helpers - strict types, no magic
+import os
+from typing import overload
 
 
-@functools.lru_cache(maxsize=None)
-def getenv(key: str, default: T = "") -> T:  # cached env lookup
+@overload
+def getenv(key: str) -> str | None: ...
+
+
+@overload
+def getenv(key: str, default: str) -> str: ...
+
+
+@overload
+def getenv(key: str, default: int) -> int: ...
+
+
+def getenv(key: str, default: str | int | None = None) -> str | int | None:
+    """
+    Get environment variable with type-inferred default.
+    
+    L20: Proper typing, no Any, handles int coercion.
+    """
     val = os.environ.get(key)
     if val is None:
         return default
-    # special handling for bools
-    if isinstance(default, bool):
-        return val.lower() in ("1", "true", "yes", "on")
     if isinstance(default, int):
-        try:
-            return int(val)
-        except ValueError:
-            return default
-    return type(default)(val) if default != "" else val
+        return int(val)
+    return val
 
 
-def colored(text: str, color: str) -> str:  # terminal colors
-    colors = {
+def colored(text: str, color: str) -> str:
+    """
+    ANSI color wrapper for terminal output.
+    
+    L20: No external deps for simple coloring.
+    """
+    colors: dict[str, str] = {
         "red": "\033[91m",
         "green": "\033[92m",
         "yellow": "\033[93m",
         "blue": "\033[94m",
+        "magenta": "\033[95m",
+        "cyan": "\033[96m",
+        "white": "\033[97m",
         "reset": "\033[0m",
     }
-    return f"{colors.get(color, '')}{text}{colors['reset']}"
-
-
-class ContextVar:  # debug flag pattern from tinygrad
-    _cache: dict[str, _ContextVar] = {}
-
-    def __new__(cls, key: str, default: Any = None):
-        if key in cls._cache:
-            return cls._cache[key]
-        instance = super().__new__(cls)
-        instance.ctx = _ContextVar(key, default=default)
-        cls._cache[key] = instance
-        return instance
-
-    def __init__(self, key: str, default: Any = None):
-        self.key, self.default = key, default
-
-    def __enter__(self):
-        self._token = self.ctx.set(True)
-        return self
-
-    def __exit__(self, *_):
-        self.ctx.reset(self._token)
-
-    @property
-    def value(self) -> Any:
-        return self.ctx.get()
-
-
-DEBUG = ContextVar("DEBUG", False)
-
-
-# dense one-liners
-def prod(x):
-    return functools.reduce(lambda a, b: a * b, x, 1)
-
-
-def dedup(x):
-    return list(dict.fromkeys(x))
-
-
-def flatten(x):
-    return [item for sublist in x for item in (sublist if isinstance(sublist, list) else [sublist])]
-
-
-def load_csv(path: str):
-    import pandas as pd
-
-    return pd.read_csv(path)
+    code = colors.get(color.lower(), "")
+    reset = colors["reset"]
+    return f"{code}{text}{reset}"
